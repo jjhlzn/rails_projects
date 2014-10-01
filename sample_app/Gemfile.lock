@@ -202,6 +202,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  bcrypt
   bcrypt-ruby
   bootstrap-sass (= 2.3.2.0)
   capybara
