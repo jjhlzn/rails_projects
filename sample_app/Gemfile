@@ -17,6 +17,7 @@ end
 group :test do
   gem 'selenium-webdriver'
   gem 'capybara'
+  gem 'factory_girl_rails'
 end
 
 gem 'bootstrap-sass', '2.3.2.0'
