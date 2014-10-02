@@ -8,8 +8,8 @@ Rails.application.routes.draw do
   resources :users
   resources :sessions, only: [:new, :create, :destroy]
   root to: 'static_pages#home'
-  match '/signin', to: 'sessions#new', via: 'get', as: 'signin'
-  match '/signout', to: 'session#destroy', via: 'get', as: 'signout'
+  match '/signin',  to: 'sessions#new', via: 'get', as: 'signin'
+  match '/signout', to: 'sessions#destroy', via: 'delete', as: 'signout'
   match '/signup', to: 'users#new', via: 'get', as: 'signup'
   match '/help', to: 'static_pages#help', via: 'get', as: 'help'
   match '/about', to: 'static_pages#about', via: 'get', as: 'about'
