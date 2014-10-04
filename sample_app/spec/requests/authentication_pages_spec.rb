@@ -75,6 +75,16 @@ describe "Authentication" do
           it { should_not have_link('Users') }
         end
 
+        describe "submitting to the create action" do
+          before { post microposts_path }
+          specify { expect(response).to redirect_to(signin_path) }
+        end
+
+        describe "submitting to the destroy action" do
+          before { delete micropost_path(FactoryGirl.create(:micropost)) }
+          specify { expect(response).to redirect_to(signin_path) }
+        end
+
       end
 
       describe "when attempting to visit a protected page" do
@@ -105,7 +115,6 @@ describe "Authentication" do
           end
         end
       end
-
 
     end
 

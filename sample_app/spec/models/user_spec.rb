@@ -138,7 +138,6 @@ RSpec.describe User, :type => :model do
 
     it "should destroy associated microposts" do
       microposts = @user.microposts.to_a
-      p microposts
       @user.destroy
       expect(microposts).not_to be_empty
       microposts.each do |micropost|
