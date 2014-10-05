@@ -13,6 +13,7 @@ describe "Static pages" do
   end
 
   describe "Home page" do
+    let(:user) { FactoryGirl.create(:user)}
     before { visit root_path }
     let(:heading) { 'Sample App' }
     let(:page_title) { '' }
@@ -21,7 +22,6 @@ describe "Static pages" do
     it { should_not have_title("| Home")}
 
     describe "for signed_in users" do
-      let(:user) { FactoryGirl.create(:user) }
       before do
         FactoryGirl.create(:micropost, user: user, content: "Lorem ipsum")
         FactoryGirl.create(:micropost, user: user, content: "Dolor sit amet")
@@ -35,6 +35,52 @@ describe "Static pages" do
         end
       end
     end
+
+    describe "microposts pagination" do
+      before(:all) do
+        @user = FactoryGirl.create(:user)
+        50.times { |n| FactoryGirl.create(:micropost,
+                              user: @user, content: "test_#{n}") }
+        end
+
+      describe "should correct" do
+        before do
+          sign_in @user
+          visit root_path
+        end
+        it { should have_selector('div.pagination') }
+        it "should list each microposts" do
+          Micropost.paginate(page: 1).each do |micropost|
+            expect(page).to have_selector('li', text: micropost.content)
+          end
+        end
+      end
+    end
+
+    describe "should show correct microposts number on side" do
+
+      describe "for more than one microposts" do
+        before do
+          FactoryGirl.create(:micropost, user: user, content: "Lorem ipsum")
+          FactoryGirl.create(:micropost, user: user, content: "Dolor sit amet")
+          sign_in user
+          visit root_path
+        end
+
+        it { should have_content("2 microposts") }
+      end
+
+      describe "for zero microposts" do
+        before do
+          sign_in user
+          visit root_path
+        end
+        it { should have_content("0 microposts")}
+      end
+
+    end
+
+
   end
 
   describe "Help page" do
