@@ -9,9 +9,14 @@ Rails.application.routes.draw do
   #get 'static_pages/about', as: 'about'
   #get 'static_pages/contact', as: 'contact'
   #get 'static_pages/test'
-  resources :users
+  resources :users do
+    member do
+      get :following, :followers
+    end
+  end
   resources :sessions, only: [:new, :create, :destroy]
   resources :microposts, only: [:create, :destroy]
+  resources :relationships, only: [:create, :destroy]
   root to: 'static_pages#home'
   match '/signin',  to: 'sessions#new', via: 'get', as: 'signin'
   match '/signout', to: 'sessions#destroy', via: 'delete', as: 'signout'

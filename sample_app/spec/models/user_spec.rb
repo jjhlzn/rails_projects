@@ -21,6 +21,12 @@ RSpec.describe User, :type => :model do
   it { should respond_to(:admin) }
   it { should respond_to(:microposts)}
   it { should respond_to(:feed) }
+  it { should respond_to(:relationships) }
+  it { should respond_to(:followed_users) }
+  it { should respond_to(:following?) }
+  it { should respond_to(:follow!) }
+  it { should respond_to(:unfollow!) }
+  it { should respond_to(:followers) }
   it { should be_valid }
   it { should_not be_admin }
 
@@ -154,6 +160,30 @@ RSpec.describe User, :type => :model do
       it { expect(@user.feed).to include(newer_micropost) }
       it { expect(@user.feed).to include(older_micropost) }
       it { expect(@user.feed).not_to include(unfollowed_post)}
+    end
+
+  end
+
+  describe "following" do
+    let(:other_user) { FactoryGirl.create(:user) }
+    before do
+      @user.save
+      @user.follow!(other_user)
+    end
+
+    it { should be_following(other_user) }
+    it { expect(@user.followed_users).to include(other_user) }
+
+    describe "and unfollowing" do
+      before { @user.unfollow!(other_user) }
+
+      it { should_not be_following(other_user) }
+      it { expect(@user.followed_users).not_to include(other_user) }
+    end
+
+    describe "followed user" do
+      subject { other_user }
+      it { expect(other_user.followers).to include(@user) }
     end
   end
 
