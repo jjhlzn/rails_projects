@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_action :signed_in_user, only: [:edit, :update, :index, :destroy]
+  before_action :signed_in_user, only: [:edit, :update, :index, :destroy, :following, :followers]
   before_action :corrent_user,   only: [:edit, :update]
   before_action :non_current_user, only: :destroy
   before_action :admin_user,       only: :destroy
@@ -48,12 +48,24 @@ class UsersController < ApplicationController
     redirect_to users_url
   end
 
+  def following
+    @title = "Following"
+    @user = User.find(params[:id])
+    @users = @user.followed_users.paginate(page: params[:page])
+    render 'show_follow'
+  end
+
+  def followers
+    @title = "Followers"
+    @user = User.find(params[:id])
+    @users = @user.followers.paginate(page: params[:page])
+    render 'show_follow'
+  end
+
   private
     def user_params
       params.require(:user).permit(:name, :email, :password, :password_confirmation)
     end
-
-
 
     def corrent_user
       @user = User.find(params[:id])
